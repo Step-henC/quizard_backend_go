@@ -328,7 +328,6 @@ func (r *mutationResolver) CreateQuiz(ctx context.Context, input model.SavedQuiz
 
 // DeleteQuiz is the resolver for the deleteQuiz field.
 func (r *mutationResolver) DeleteQuiz(ctx context.Context, input *model.SavedQuizInput) (*model.SavedQuiz, error) {
-
 	gc, err := GinContextFromContext(ctx)
 	if err != nil {
 		return &model.SavedQuiz{}, err
