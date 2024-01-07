@@ -24,8 +24,56 @@ and Redis for the cache/ bloom filter.
   Redis is also a docker compose, with the UI portion provided by a [redis-commander docker container](https://migueldoctor.medium.com/run-redis-redis-commander-in-3-steps-using-docker-195fc6fa7076).
 
 ### How to run this services? 
-##### Got Docker?
-  - This app is containerized with Dokcer, for those without Go installed. To run, simply build the image at the projects root directory
+
+Make sure you have [Docker Engine installed](https://docs.docker.com/engine/install/). We need them for the Databases
+
+##### Run Databases
+ - Redis and Elasticsearch are housed in a multi-container docker compose file at the project's root directory. Start DB's run the following command
+
+   `docker compose -d up`
+
+    You should see Elasticsearch in your browser at `localhost:9200` and Redis Commander at `localhost:8081`
+
+   To view ElasticSearch users, visit your browser at `localhost:9200/users/_search?pretty`
+   To view Elasticsearch quizzes, visit browse at `localhost:9200/quizzes/_search?pretty`
+
+##### Run Service
+   
+###### No Go Installed?
+  - This app is containerized with [Docker, for those without Go installed](https://docs.docker.com/language/golang/build-images/). To run, open up 
+    docker desktop and make sure engine is running. Then, simply 
+    build the image at the project's root directory
+
+    `docker build -t quizard-be:multistage -f Dockerfile.multistage .`
+
+    Then run the container
+
+    ` docker run --publish 8080:8080 quizard-be:multistage`
+
+    You should see the graphql playground at `localhost:8080` in your browser.
+
+    ![gql playground](https://blog.logrocket.com/wp-content/uploads/2020/06/graphql-playground-send-http-headers-1.png)
+
+    Please refer to the schema.graphqls in this project to craft queries. Start with
+
+    `query GetAuth {
+        getAuth
+    }`
+
+    to get JWT for subsequent queries.
+
+    To create user, copy that Jwt (myJwt) from get auth. Then at the bottom in Headers section, add
+    `{
+        "Authorization": "Bearer {myJwt}"
+    }`
+    
+
+    `mutation CreateUser($input: UserInput!) {
+      createUser(input: $input) {
+        email,
+        password
+      }
+    }`
 
 ### Considerations
   - JWT Authentication: 
