@@ -18,7 +18,7 @@ and Redis for the cache/ bloom filter.
 - Databases: ElasticSearch is growing in popularity for the benefits it affords in [high performance and fast delivery times for developing products](https://aws.amazon.com/what-is/elasticsearch/#:~:text=Elasticsearch%20benefits,-Fast%20time%2Dto&text=Elasticsearch%20offers%20simple%20REST%2Dbased,applications%20for%20various%20use%20cases.)
   This application uses a Docker-Compose file for the elasticSearch database. The input data is resolved into json where is sent to elasticsearch for storage.
 - Cache: Redis is a popular key-value storage for caching data. This application uses the [cache-aside pattern for Redis caching](https://codedamn.com/news/backend/advanced-redis-caching-techniques#:~:text=use%20in%20Redis.-,Cache%2DAside%20Pattern,-The%20cache%2Daside)
-  For users, Redis employs a bloom-filter data structure. Briefly, Bloom filters are non-deterministic data structures that have higher false-positive rates,
+  For users, Redis employs a [bloom-filter data structure](https://redis.io/docs/data-types/probabilistic/bloom-filter/). Briefly, Bloom filters are non-deterministic data structures that have higher false-positive rates,
   but zero false-negatives. Meaning, bloom filters cannot tell you whats in the database, but can tell you what is not in the database. The filter
   is implemented before a timely, json serializing db read to elasticsearch is made for users. The result is less reads and hopefully high performance.
   Redis is also a docker compose, with the UI portion provided by a [redis-commander docker container](https://migueldoctor.medium.com/run-redis-redis-commander-in-3-steps-using-docker-195fc6fa7076).
@@ -68,6 +68,8 @@ Make sure you have [Docker Engine installed](https://docs.docker.com/engine/inst
     }`
     
 
+    Then, run the following mutation:
+    
     `mutation CreateUser($input: UserInput!) {
       createUser(input: $input) {
         email,
@@ -75,5 +77,22 @@ Make sure you have [Docker Engine installed](https://docs.docker.com/engine/inst
       }
     }`
 
+    In the variables section at the bottom, add
+    {
+      "email": "anyemail",
+      "password": "anypassword"
+    }
+
+    You should see the info returned. Then check elasticsearch for users in the browser at `localhost:9200/users/_search?pretty`
+
+    This will get you on your way to creating quizzes!
 ### Considerations
-  - JWT Authentication: 
+  - JWT Authentication: JWTs are regarded as safer as Http-only, however with the graphql server being bootstrapped from gqlgen, I used a refresh token 
+    with a token request regenerating a new token. Additionally, the gql server wrapped in a gin framework made context tricky for http-only jwts. 
+    Nonetheless, for development purposes, I did not flush out token secrets (or hide them). Honestly JWTs were not a 
+    main focus in this project. I focused on implementing JWTs in the most simplest code imaginable. However, future projects will employ JWTs with a bit 
+    more intentionality.
+
+ - Data Architecture: The gqlgen generates the models. All mutations need an input type. However, mutations cannot return input types. Moreover, I need 
+   the original model/type to be returned to help with writing to Apollo GraphQL's in memory cache in the front end. Mapping input types to their 
+   corresponding query types made mapping data less ideal. Future projects will fine tune the shape of the data in relation to gqlgen model generation
