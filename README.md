@@ -42,17 +42,22 @@ Make sure you have [Docker Engine installed](https://docs.docker.com/engine/inst
 ###### No Go Installed?
   - This app is containerized with [Docker, for those without Go installed](https://docs.docker.com/language/golang/build-images/). To run, open up 
     docker desktop and make sure engine is running. Then, simply 
-    build the image at the project's root directory
 
-    `docker build -t quizard-be:multistage -f Dockerfile.multistage .`
+    run docker compose at the project's root directory
 
-    Then run the container
-
-    ` docker run --publish 8080:8080 quizard-be:multistage`
+    `docker-compose up`
 
     You should see the graphql playground at `localhost:8080` in your browser.
 
     ![gql playground](https://blog.logrocket.com/wp-content/uploads/2020/06/graphql-playground-send-http-headers-1.png)
+
+    Then, open Docker desktop and execute the following curl commands in the elasticsearch container 
+
+    `curl -X PUT http://localhost:9200/users && curl -X PUT http://localhost:9200/quizzes`
+
+    This is until I refactor code to create indices in api call.
+
+    We should be able to CRUD data now.
 
     Please refer to the schema.graphqls in this project to craft queries. Start with
 
@@ -86,6 +91,18 @@ Make sure you have [Docker Engine installed](https://docs.docker.com/engine/inst
     You should see the info returned. Then check elasticsearch for users in the browser at `localhost:9200/users/_search?pretty`
 
     This will get you on your way to creating quizzes!
+
+###### Go Installed?
+
+Pull down as you would any go project. Be sure to initiate the gqlgen graphql server with the following commands
+
+`go get github.com/99designs/gqlgen` 
+`go run github.com/99designs/gqlgen init ` 
+`go run github.com/99designs/gqlgen generate`
+
+Continue to CRUD data as mentioned in the previous section
+
+
 ### Considerations
   - JWT Authentication: JWTs are regarded as safer as Http-only, however with the graphql server being bootstrapped from gqlgen, I used a refresh token 
     with a token request regenerating a new token. Additionally, the gql server wrapped in a gin framework made context tricky for http-only jwts. 

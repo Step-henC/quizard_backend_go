@@ -31,7 +31,7 @@ WORKDIR /quizard-backend-go
 # copy exe from builder into this empty image at this directory. exe will have name quizard-backend
 COPY --from=builder /quizard-backend-go/quizard-backend .
 
-EXPOSE 8080
+# EXPOSE 8080
 
 # enter into workdir of this image, slash executable name
 # docker build -t quizard-be:multistage -f Dockerfile.multistage .

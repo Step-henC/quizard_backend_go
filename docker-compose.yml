@@ -1,10 +1,33 @@
 version: '3'
 services:
+  quizard-backend:
+    depends_on:
+    - redis
+    - elasticsearch
+    build: .
+    container_name: quizard-backend-go
+    hostname: quiz-server
+    # networks:
+    #  - quiznet
+    ports: 
+    - "8080:8080" 
+    command: > 
+      sh -c "curl -X PUT http://localhost:9200/quizzes
+      && curl -X PUT http://localhost:9200/users"
+    restart: on-failure
   elasticsearch:
+    container_name: elastic
+    hostname: elasticsearch
     image: elasticsearch:8.8.0
+
+    # networks:
+    #   - quiznet
     ports: 
       - 9200:9200
       - 9300:9300
+    # volumes:
+    #   - elastic: /index/users
+    #   - elastic: /index/quizzes
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
@@ -14,6 +37,8 @@ services:
     hostname: redis-commander
     image: rediscommander/redis-commander:latest
     restart: always
+    # networks:
+    #   - quiznet
     environment:
     - REDIS_HOSTS=local:redis:6379
     ports:
@@ -23,7 +48,12 @@ services:
     container_name: redis
     image: redis:6.2-alpine
     restart: always
+    # networks:
+    #   - quiznet
     ports:
-      - '6379:6379'
+      - '127.0.0.1:6379:6379'
     command: redis-server --save 20 1 --loglevel warning
     
+# networks:
+#  quiznet:
+#   driver: bridge
