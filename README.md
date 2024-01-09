@@ -100,6 +100,8 @@ Pull down as you would any go project. Be sure to initiate the gqlgen graphql se
 `go run github.com/99designs/gqlgen init ` 
 `go run github.com/99designs/gqlgen generate`
 
+Then run `go run server.go` to start the service
+
 For databases, go to the `dbcontainers` directory and `docker-compose up` with just the databases.
 Continue to CRUD data as mentioned in the previous section
 
