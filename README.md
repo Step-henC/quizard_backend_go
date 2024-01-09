@@ -103,6 +103,8 @@ Pull down as you would any go project. Be sure to initiate the gqlgen graphql se
 For databases, go to the `dbcontainers` directory and `docker-compose up` with just the databases.
 Continue to CRUD data as mentioned in the previous section
 
+Troubleshooting: If receiving "no host" error. change dockerDB addresses to localhost.
+
 
 ### Considerations
   - JWT Authentication: JWTs are regarded as safer as Http-only, however with the graphql server being bootstrapped from gqlgen, I used a refresh token 

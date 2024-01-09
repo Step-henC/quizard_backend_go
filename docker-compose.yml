@@ -11,9 +11,6 @@ services:
     #  - quiznet
     ports: 
     - "8080:8080" 
-    command: > 
-      sh -c "curl -X PUT http://localhost:9200/quizzes
-      && curl -X PUT http://localhost:9200/users"
     restart: on-failure
   elasticsearch:
     container_name: elastic
