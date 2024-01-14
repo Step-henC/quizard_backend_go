@@ -2,14 +2,14 @@
 
 ### What Is This?
 
-This repository houses the backend service for the Quizard App with the UI found [at this repository.](https://github.com/Step-henC/quizard_ui)
+This repository houses the backend service for the Quizard App **with the UI found [at this repository.](https://github.com/Step-henC/quizard_ui)**
 The quizard backend service is written in Go with incoming quiz and user information with JWT headers routed to an [ElasticSearch database](https://pkg.go.dev/github.com/elastic/go-elasticsearch/v7) 
 and Redis for the cache/ bloom filter.
 
 ### How Does This Service work?
 - GraphQL: This service is bootstrapped from GqlGen's grapql server. As a result, the main files changed are the schema files to identify the types, the schema.resolver files
   to implement logic on what to do with data, and any handlers. GqlGen's graphql uses net/http package in Go. However the Gin web server framework is regarded as [faster](https://veryfirstfact.com/comparing-gorilla-mux-gin-net-http-for-http-web-framework/#:~:text=Gin%20makes%20use%20of%20httprouter%2C%20which%20performs%20operations%20more%20quickly)
-  than net/http package. So, I wrapped this [gqlgen graphql server in the gin framework](https://gqlgen.com/recipes/gin/) for faster performance. The http context can then be extracted from each endpoint and
+  than net/http package. So, **I wrapped this [gqlgen graphql server in the gin framework](https://gqlgen.com/recipes/gin/) for faster performance.** The http context can then be extracted from each endpoint and
   evaluated for JWTs.
 - JWT Authentication: JWTs are handled most popularly in either application (in-memory) storage or Http-only. Http-only cookies are generally considered more safe, however
   this application uses GraphQL servers that have been bootstrapped from Apollo (in front end) and [GqlGen](https://gqlgen.com/). As a result the middle ground was to use an in-memory token serving
@@ -32,7 +32,7 @@ Make sure you have [Docker Engine installed](https://docs.docker.com/engine/inst
 
    `docker compose -d up`
 
-    You should see Elasticsearch in your browser at `localhost:9200` and Redis Commander at `localhost:8081`
+    You should see Elasticsearch in your browser at `localhost:9200` and Redis Commander at `localhost:8084`
 
    To view ElasticSearch users, visit your browser at `localhost:9200/users/_search?pretty`
    To view Elasticsearch quizzes, visit browse at `localhost:9200/quizzes/_search?pretty`
